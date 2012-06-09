@@ -1,0 +1,97 @@
+/***************************************************************************
+ * 
+ * Copyright (c) 2012 Baidu.com, Inc. All Rights Reserved
+ * $Id$ 
+ * 
+ **************************************************************************/
+ 
+ 
+ 
+/**
+ * kindle.css ~ 2012/06/09 14:22:03
+ * @author leeight(liyubei@baidu.com)
+ * @version $Revision$ 
+ * @description 
+ *  
+ **/
+
+
+
+@page {
+  /** Kindle 6 inch */
+  size: 9.12cm 12.16cm;
+  margin: 20pt 15pt 20pt 15pt;
+
+  @top-right {
+    content: "这里是每页的表头";
+    vertical-align: bottom;
+    font-size: 50%;
+    border-bottom: 1px solid black;
+  }
+
+  @bottom-right { 
+    content: counter(page);
+    font-style: italic;
+    font-size: 50%;
+  }
+
+  @footnotes {
+    border-top: 1px solid black;
+  }
+}
+
+
+@font-face {
+  font-family: arial;
+  src: local("Times New Roman");
+}
+
+@font-face {
+  font-family: sans-serif;
+  src: local("WenQuanYi Micro Hei");
+}
+
+@font-face {
+  font-family: monospace;
+  src: local("Ubuntu Mono");
+}
+
+.chapter {
+  counter-reset: footnote;
+}
+
+.fn {
+  float: footnote;
+  font-size: 50%;
+  font-family: Georgia;
+  footnote-style-position: inside;
+}
+.fn::footnote-call {
+  content: "[" counter(footnote) "]";
+  vertical-align: super;
+  line-height: none;
+  font-size: 80%;
+}
+.fn::footnote-marker {
+  /** TODO */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* vim: set ts=4 sw=4 sts=4 tw=100 noet: */
