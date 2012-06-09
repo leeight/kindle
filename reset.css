@@ -1,0 +1,454 @@
+/***************************************************************************
+ * 
+ * Copyright (c) 2012 Baidu.com, Inc. All Rights Reserved
+ * $Id$ 
+ * 
+ **************************************************************************/
+ 
+ 
+ 
+/**
+ * reset.css ~ 2012/06/09 16:37:31
+ * @author leeight(liyubei@baidu.com)
+ * @version $Revision$ 
+ * @description 
+ *  
+ **/
+
+body,p,dl,dd,blockquote,h1,h2,h3,h4,h5,h6,pre,table,td,th,ul,ol,li,hr,legend,fieldset,input,textarea,img,form{margin:0;padding:0;}
+img,iframe{border:none;}
+blockquote,q{quotes:none;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+body{font:16px/1.5 Verdana, 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#222;margin:0;}
+legend{color:#000;font-size:1em;}
+p{margin:0.5em 0; word-wrap:break-word}
+li p {text-indent:0; margin-bottom: 0.5em}
+h1,h2,h3,h4,h5{color:#111;font-family: 'OFL Sorts Mill Goudy', 'OFL Sorts Mill Goudy TT', Georgia, serif;font-weight:700; margin-top:0.5em;}
+h1{font-size:1.6em;line-height:1;margin-bottom:1em;}
+h2{font-size:1.2em;margin-bottom:0.5em; color:#AF183F;}
+h3{font-size:1.1em;line-height:1;margin-bottom:0.5em; color:#49138D;}
+h4{font-size:1em;line-height:1.25;margin-bottom:0.5em; color:#13538D;}
+h5{font-size:1em;font-weight:700;margin-bottom:0.5em; color:#638D13;}
+h6{font-size:1em;font-weight:700;}
+big{font-size:1.3em;}
+small{font-size:.85em;}
+strong{color:red;}
+em{font-weight:bold; font-style:normal}
+code,pre,samp{font-family:Menlo, Consolas, Monaco, "Courier New", Courier, monospace;overflow:auto;word-wrap:break-word;}
+code {padding-left:5px; padding-right:5px; color:#000; background:#EEF0EB}
+acronym,abbr{border-bottom:1px dotted #000;cursor:help;}
+acronym{letter-spacing:.1em;text-transform:uppercase;}
+html{background:#fff;color:#000;}
+:link:focus,:visited:focus{color:#C63;}
+:link{color:#356aa0;text-decoration:none}
+:visited{color:#67035a0;text-decoration:none}
+:link:hover,:visited:hover{color:#AD7328;text-decoration:underline}
+:link:active,:visited:active{color:#356a00;}
+table,input{font-size:1em;}html{border:none;}
+table{border-collapse:separate;border-spacing:0;}
+.hide{position:absolute;left:0;top:-41.66667em;width:.08333em;height:.08333em;overflow:hidden;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+.clearfix{display:block; zoom:1}
+.gainlayout{zoom:1;}
+span.amp{font-family:Baskerville,"Goudy Old Style","Palatino","Book Antiqua",serif;font-style:italic;font-size:1.1em;}
+del{border:.08333em solid #c99;text-decoration:line-through;background:#fdcccc;}
+ins{border:.08333em solid #9c9;background:#CFC;}
+hr{border:0;height:2px;background:#EDEEED;border-top:1px solid #BCC0B9;clear:both;margin-left: -15em;padding-left: 15em;}
+
+ul, ol {
+	margin: 0 0 1em 2em; 	
+}
+
+
+ul ul, ol ol, ul ol, ol ul {
+	margin-left:2em;
+}
+
+pre {
+	color: #070606;
+	background-color: #f5f5f5;
+	margin: 1em 0;
+	padding: 0.5em;
+	border: 1px dotted #b7c4d3;
+	line-height: 150%;
+	zoom: 1;
+}
+
+h2:target, h3:target { 
+	color: #4D80B3;
+	text-shadow:1px 1px 2px #ccc;
+}
+
+/*Table*/
+
+table.ADoc_table {
+	border-left: 1px solid #8CACBB;
+	border-top: 1px solid #8CACBB;
+	width: 95%;
+	color: #222;
+	line-height:2em;
+	margin: 0 0 1.5em;
+}
+
+table.ADoc_table  thead th, table.ADoc_table tfoot th{
+	border: 1px solid #8CACBB;
+	border-left:none;
+	color:#000;
+	font-weight:bold;
+	line-height:3em;
+}
+
+table.ADoc_table tfoot th {
+	background-position:left bottom;
+	border:none;
+	line-height:2.5em;
+}
+
+table.ADoc_table tbody th, table.ADoc_table tbody td, table.ADoc_table tfoot th {
+	border-bottom: 1px solid #8CACBB;
+	border-right: 1px solid #8CACBB;
+	vertical-align:top;
+	padding-left: 0.5em;
+	word-break: break-all;
+}
+
+table.ADoc_table tbody th{
+	color:#1867AF;
+	background: #DEE7EC;
+}
+
+table.ADoc_table tr-alt {
+	background:#ECF5FD;
+}
+
+table.ADoc_table tbody tr:nth-child(odd) td {
+	background: #ebf1f7;
+}
+
+table.ADoc_table tbody tr:hover td{
+	background:#F3FAFA;
+}
+
+.ADoc_table_control {
+	border: 1px solid #6D87B0;
+	background: #fff;
+	font-weight:normal;
+	position:absolute;
+	top: 2px;
+	right:2px;
+	text-align:left;
+}
+
+
+.code  { background: #ffffff; }
+.code .c { color: #888888 } /* Comment */
+.code .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.code .k { color: #008800; font-weight: bold } /* Keyword */
+.code .cm { color: #888888 } /* Comment.Multiline */
+.code .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.code .c1 { color: #888888 } /* Comment.Single */
+.code .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.code .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.code .ge { font-style: italic } /* Generic.Emph */
+.code .gr { color: #aa0000 } /* Generic.Error */
+.code .gh { color: #303030 } /* Generic.Heading */
+.code .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.code .go { color: #888888 } /* Generic.Output */
+.code .gp { color: #555555 } /* Generic.Prompt */
+.code .gs { font-weight: bold } /* Generic.Strong */
+.code .gu { color: #606060 } /* Generic.Subheading */
+.code .gt { color: #aa0000 } /* Generic.Traceback */
+.code .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.code .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.code .kn { color: #008800; font-weight: bold } /* Keyword.Namespace */
+.code .kp { color: #008800 } /* Keyword.Pseudo */
+.code .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.code .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.code .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.code .s { color: #dd2200; } /* Literal.String */
+.code .na { color: #336699 } /* Name.Attribute */
+.code .nb { color: #003388 } /* Name.Builtin */
+.code .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.code .no { color: #003366; font-weight: bold } /* Name.Constant */
+.code .nd { color: #555555 } /* Name.Decorator */
+.code .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.code .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.code .nl { color: #336699; font-style: italic } /* Name.Label */
+.code .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.code .py { color: #336699; font-weight: bold } /* Name.Property */
+.code .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.code .nv { color: #336699 } /* Name.Variable */
+.code .ow { color: #008800 } /* Operator.Word */
+.code .w { color: #bbbbbb } /* Text.Whitespace */
+.code .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.code .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.code .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.code .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.code .sb { color: #dd2200; } /* Literal.String.Backtick */
+.code .sc { color: #dd2200; } /* Literal.String.Char */
+.code .sd { color: #dd2200; } /* Literal.String.Doc */
+.code .s2 { color: #dd2200; } /* Literal.String.Double */
+.code .se { color: #0044dd; } /* Literal.String.Escape */
+.code .sh { color: #dd2200; } /* Literal.String.Heredoc */
+.code .si { color: #3333bb; } /* Literal.String.Interpol */
+.code .sx { color: #22bb22; } /* Literal.String.Other */
+.code .sr { color: #008800; } /* Literal.String.Regex */
+.code .s1 { color: #dd2200; } /* Literal.String.Single */
+.code .ss { color: #aa6600; } /* Literal.String.Symbol */
+.code .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.code .vc { color: #336699 } /* Name.Variable.Class */
+.code .vg { color: #dd7700 } /* Name.Variable.Global */
+.code .vi { color: #3333bb } /* Name.Variable.Instance */
+.code .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+
+/* dtree */
+.dtree {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #666;
+	white-space: nowrap;
+	background: #fff;
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+	outline: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #333;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree .clip {
+	overflow: hidden;
+}
+.dtree .dTreeNode {
+    height: 18px;
+}
+
+.ANote {
+	color: #070606;
+	margin: 2em 0;
+	padding: 1em 0;
+	border: 1px solid #b7c4d3;
+	border-width: 1px 0;
+	line-height: 150%;
+	min-height: 40px;
+	background-repeat: no-repeat;
+	background-position: 25em 0;
+	_height: 40px;
+	zoom: 1;
+}
+
+.run_code {
+    width: 180px;
+    border: 1px solid gray;
+    margin-top: -2em;
+}
+
+
+#toc ul {
+    margin-left: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+#toc ul ul {
+    margin-left: 0;
+    padding-left: 0;
+    margin-left: 2em;
+    list-style-type: disc;
+}
+
+#toc ul ul ul {
+    list-style-type: circle;
+}
+
+#toc ul ul ul ul {
+    list-style-type: square;
+}
+
+#doc_list {
+    font-size:0.875em;
+    position:absolute;
+    left:10px;
+    top:65px;
+	z-index:300;
+	border:1px solid gray;
+
+	padding:0.5em;
+	display:none;
+}
+
+/* dir */
+
+#ADoc_dir {
+    font-size: 14px;
+}
+
+#ADoc_dir h3 {
+    color: #606060;
+    border-bottom: 1px solid #9A9B98;
+}
+
+#ADoc_dir_tree {
+    float: left;
+    width: 20em;
+    overflow: hidden;
+}
+
+#ADoc_dir_content {
+	float:right;
+	width:100%;
+	margin:0 0 0 -21em;
+}
+
+#ADoc_dir_content_inner {
+	margin: 0 0 0 21em;
+}
+
+
+#ADoc_dir_Dirs, .ADoc_dir_file {
+    list-style-type: none;
+}
+
+#ADoc_dir_Dirs li {
+    width: 19.5%;
+    max-width: 10em;
+    float: left;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+#ADoc_dir_Dirs li a {
+    cursor: pointer;
+    width: 100%;
+    height: 60px;
+    display: block;
+    text-align: center;
+    padding-top: 40px;
+    background: #fff center 0px url('dir/dir.png') no-repeat;
+}
+
+#ADoc_dir_Dirs li a:hover {
+    background-color: #CADDEB;
+    background-position: center -217px;
+}
+
+#ADoc_dir_Dirs li .item {
+    color: #595959;
+    font-size: 12px;
+}
+
+
+.ADoc_dir_file li {
+    width: 49%;
+    float: left;
+    margin-bottom: 3px;
+}
+
+#ADoc_dir_Images li {
+    width: 150px;
+    height: 140px;
+    text-align: center;
+}
+
+
+.lite_search {
+	position:absolute;
+	z-index:100;
+	font-size: 12px;
+	right: 10px;
+	top: 59px;
+	width: 140px;
+	background: url('default/lite_search_right.png') no-repeat -260px -138px;
+}
+
+.lite_search_show {
+    background-position: 0 0;
+    width: 400px;
+}
+
+.lite_search_show .lite_search_result_bottom{
+    display: block;
+}
+
+.lite_search input {
+	position:absolute;
+	right: 20px;
+	top: 5px;
+	width: 88px;
+	height: 20px;
+	border: none;
+	border-bottom: 1px solid #999;
+	background: none;
+}
+
+.lite_search_result {
+	margin-top: 40px;
+	width: 398px;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid #999;
+	border-top:none;
+	border-bottom:none;
+	/* IE always has height, even it's empty */
+	*height:0;
+}
+
+.lite_search_result ul {
+	margin:0;
+	padding:0;
+}
+
+.lite_search_result ul li a {
+	display: block;
+	zoom: 1;
+	padding: 2px 5px;
+	cursor: pointer;
+}
+
+.lite_search_result ul li a:hover,  .lite_search_result ul li a.focus{
+	background: #EAEBE9;
+	cursor: pointer;
+}
+
+.lite_search_result_bottom {
+	height: 20px;
+	display: none;
+	text-align: center;
+	background: url('default/lite_search_right.png') no-repeat -500px -50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* vim: set ts=4 sw=4 sts=4 tw=100 noet: */

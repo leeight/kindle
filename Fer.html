@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title># Fer</title>
+    <meta name="author" content="" />
+    <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="kindle.css" />
+    <link rel="stylesheet" type="text/css" href="typography.css" />
+</head>
+<body>
+<div id="container">
+    <div id="articleWrap">
+        <div id="article">
+            <div id="fileTags"></div>
+            <div id="content">
+<h1>Fer<a name="Fer"> </a></h1>
+<p>leeight (liyubei@baidu.com)<br />
+2011/01/21<br />
+2011/05/24
+</p>
+
+<h2>要解决的问题<a name="要解决的问题"> </a></h2>
+<ol>
+ <li>
+     减少创建action时候的重复性工作<ul>
+ <li>
+     创建action.js
+ </li>
+
+ <li>
+     创建action.html
+ </li>
+
+ <li>
+     修改mockup.html
+ </li>
+
+ <li>
+     修改config.js
+ </li>
+
+ <li>
+     修改data.js
+ </li>
+
+ <li>
+     修改module.js
+ </li>
+
+ <li>
+     ...
+ </li>
+</ul>
+
+ </li>
+
+ <li>
+     保证创建出来action的一致性，易于维护<ul>
+ <li>
+     代码风格
+ </li>
+
+ <li>
+     ...
+ </li>
+</ul>
+
+ </li>
+
+ <li>
+     易于action的调试<ul>
+ <li>
+     创建完即可见
+ </li>
+
+ <li>
+     创建完即可调试
+ </li>
+
+ <li>
+     ...
+ </li>
+</ul>
+
+ </li>
+
+ <li>
+     为后续支持模块动态加载和系统文档的生成提供条件
+ </li>
+
+ <li>
+     为后续基于idl自动生成相关的表单代码提供条件
+ </li>
+</ol>
+
+<h2>如何解决<a name="如何解决"> </a></h2>
+
+<h3>Action的创建<a name="Action的创建"> </a></h3>
+
+<h4>第一步：最基本的一个action<a name="第一步最基本的一个Action"> </a></h4>
+<p>哪些内容对于一个action是必须的呢？我们首先通过手工创建好必须的文件和内容，然后将
+   手工创建的文件和内容模板化，在模板化的过程中，进行适当的扩展。我们会以<code>Hello World</code>作为例子
+   来演示我们创建Action的过程。首先创建三个必须的文件：
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/helloworld.js
+src/jn/demo/helloworld.css
+src/jn/demo/helloworld.html
+</pre></div>
+<p>看起来是不是很熟悉呢？<code>逻辑</code>，<code>样式</code>，<code>结构</code>相分离？三个文件的内容请自行查看，这里就不列出了。
+   但是有了这三个文件，我们还是无法在页面中展示任何内容。
+</p>
+<p>因为我们需要通过<code>er.controller.addModule</code>来注册一个模块，之后才能借助<code>module</code>中的配置，把一个<code>path</code>和<code>action</code>关联
+   起来，现在我们的<code>helloworld</code>仅仅是<code>action</code>，还缺少<code>module</code>和<code>path</code>这两个角色。
+</p>
+<p>首先让我们来创建一个<code>module</code>，这里我们需要遵循编码规范，所有的<code>module</code>都用<code>module.js</code>来命名，它的角色
+   基本等同于以前的<code>ad.js</code> + <code>config.js</code> + <code>data.js</code>，我们在这里不进行区分了，都放到<code>module.js</code>里面了。
+</p>
+<div class="code"><pre>// 文件列表
+src/js/demo/module.js
+</pre></div>
+<p>现在我们需要把<code>path</code>和<code>action</code>关联起来，方法就是修改<code>module.js</code>中<code>jn.demo.config</code>的配置，添加<code>action</code>配置字段
+</p>
+<div class="code js_code"><pre><span class="c">/**</span>
+<span class="c"> * @type {Object}</span>
+<span class="c"> * @const</span>
+<span class="c"> */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;location&quot;</span> <span class="o">:</span> <span class="s2">&quot;/jn/demo/helloworld&quot;</span><span class="o">,</span>
+            <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="s2">&quot;jn.demo.Helloworld&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+</pre></div>
+<p>OK，现在工作已经完成80%了，剩下的就是打开页面，调试我们这个action。但是页面在哪里呢？我们能够想到的最简单的方法就
+   是创建一个页面，把所需要的代码都加载进来，然后调试。不错，这是正确的解决问题思路，但是如何加载所需要的代码呢？如何
+   保证这些代码的加载顺序呢？这个问题没有最优的解决方案，但是有一个方案我感觉还是不错的，所以后续都是按照这个方式来处
+   理的，当然如果你有更好的方案也欢迎告诉我，帮我完善。
+</p>
+<p>我们创建一个新的文件：<code>src/jn/demo/helloworld.app.html</code>，文件的内容很简单，请自行参考。
+</p>
+<p>现在让我们在浏览器里面访问<code>src/jn/demo/helloworld.app.html</code>，正常情况下，应该能看到红色的<code>HELLO WORLD.</code>文字。
+</p>
+<p>但是，一般情况下，我们第一次测试都会遇到问题，这次当然也不例外。如果没有什么特殊情况，我们遇到的错误提示信息应该是：
+</p>
+<div class="code"><pre>goog.require could not find: jn.demo.Helloworld
+</pre></div>
+<p>这是因为我们还没有把<code>jn.demo.Helloworld</code>跟它所在的文件<code>src/jn/demo/helloworld.js</code>建立好对应关系，所以无法知道
+   从哪里去加载所需要的文件。建立好对应关系的方式非常简单，只需要在终端中切换到<code>webapp</code>目录，执行命令：
+</p>
+<div class="code"><pre>ant deps
+</pre></div>
+<p>即可。
+</p>
+<p>按照正常情况，应该没问题了，但是刷新浏览器之后，还是看不到红色的<code>HELLO WORLD.</code>，经过调试之后，我们发现是因为无法将<code>/jn/demo/helloworld</code>
+   这个<code>path</code>映射到<code>jn.demo.Helloworld</code>这个<code>action</code>导致的，而这个映射关系是在<code>src/jn/demo/module.js</code>中维护的，不过我们貌似还
+   没有加载这个文件 :-(
+</p>
+<p>这里简单的分析一下原因：一般情况下，如果<code>jn.demo.Helloworld</code>对<code>jn.demo.config</code>或者<code>jn.demo.data</code>产生了依赖，会自动加载<code>module.js</code>，
+   因为我们的示例代码中没有这个依赖，而大多数情况下，这个依赖都是存在的，因此合乎常理的方法是修改<code>helloworld.js</code>，添加一个<code>jn.demo.config</code>
+   或者<code>jn.demo.data</code>的依赖即可。
+</p>
+<div class="code js_code"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;jn.demo.data&quot;</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;jn.demo.config&quot;</span><span class="p">);</span>
+</pre></div>
+<p>然后执行命令<code>ant deps</code>，更新依赖关系。
+</p>
+<p>如果你对<code>ant deps</code>什么时候应该执行有疑问，我就简单的解释一下。并不是修改了js就需要执行<code>ant deps</code>，而是我们修改的js中对<code>goog.provide</code>或者
+   <code>goog.require</code>有影响才需要执行<code>ant deps</code>。
+</p>
+<p>哈利路亚，终于看到红色的<code>HELLO WORLD.</code>文字了，看来我们的action可以正常工作了。
+</p>
+
+<h4>第二步：使用控件<a name="第二步使用控件"> </a></h4>
+<p>当看到页面中有红色的文字之后，我们希望在页面中添加更复杂的内容，比如一个按钮？此时我们创建一个新的action来作这个事情，创建的文件如下：
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/helloui.js
+src/jn/demo/helloui.html
+src/jn/demo/helloui.css
+</pre></div>
+<p>之后更新：
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/module.js
+</pre></div>
+<p>添加<code>path</code>到<code>action</code>的对应关系。
+</p>
+<div class="code js_code"><pre><span class="c">/**</span>
+<span class="c"> * @type {Object}</span>
+<span class="c"> * @const</span>
+<span class="c"> */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="p">[</span>
+        <span class="p">...</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;location&quot;</span> <span class="o">:</span> <span class="s2">&quot;/jn/demo/helloui&quot;</span><span class="o">,</span>
+            <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="s2">&quot;jn.demo.Helloui&quot;</span>
+        <span class="p">}</span><span class="o">,</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+</pre></div>
+<p>然后创建mockup页面：
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/helloui.app.html
+</pre></div>
+<p>最后执行命令<code>ant deps</code>，更新依赖关系。打开浏览器，查看效果，没有问题的话，我们应该可以看到页面上有一个按钮了 :-)
+</p>
+<p>这里说明一下，<code>jn.demo.Helloui</code>对<code>ui.Button</code>有依赖，但是我们没有在<code>src/jn/demo/helloui.html</code>中声明这个依赖，而是通过
+   分析<code>goog.include("jn/demo/helloui.html")</code>间接计算出来的。
+</p>
+
+<h4>第三步：创建工具<a name="第三步创建工具"> </a></h4>
+<p>从<code>第一步</code>和<code>第二步</code>的过程我们不难发现，创建一个可以调试的Action，只需要创建三个文件<code>action.js</code>, <code>action.html</code>, <code>action.css</code>，然后
+   更新或者创建<code>module.js</code>，之后创建一个<code>{action}.app.html</code>来进行调试即可。
+</p>
+<p>能找到规律，就不难创建工具了，首先描述一下理想情况下我想要工具的样子：
+</p>
+<p>默认情况下，执行命令：
+</p>
+<div class="code"><pre>Fer --gen_app --name &quot;jn.demo.ShowCase&quot;
+</pre></div>
+<p>会导致如下的结果：
+</p>
+<div class="code"><pre>// +表示增加, M表示修改
++ src/jn/demo/show_case.js
++ src/jn/demo/show_case.css
++ src/jn/demo/show_case.html
++ src/jn/demo/show_case.app.html
+M src/jn/demo/module.js
+</pre></div>
+<p>在<code>module.js</code>中会自动创建好<code>/jn/demo/show_case</code>和<code>jn.demo.ShowCase</code>的映射关系，之后我们访问<code>show_case.app.html</code>会直接看到默认的效果了.
+</p>
+<p>我还希望它能支持额外的参数，例如：
+</p>
+<div class="code"><pre>Fer --gen_app --name <span class="s2">&quot;jn.demo.ShowCase&quot;</span> <span class="se">\</span>
+    <span class="o">[</span>--action_path <span class="s2">&quot;/jn/demo/xxx&quot;</span> <span class="o">[</span>--super_class <span class="s2">&quot;er.ListAction&quot;</span><span class="o">]]</span>
+Fer --gen_app --name <span class="s2">&quot;jn.dashboard.Gold&quot;</span> --super_class <span class="s2">&quot;er.FormAction&quot;</span>
+Fer --gen_app --name <span class="s2">&quot;jn.dashboard.Landmark&quot;</span> --super_class <span class="s2">&quot;er.ListAction&quot;</span>
+</pre></div>
+<p>此外，如果要创建的<code>Action</code>或者<code>Path</code>已经存在了，给出相应的警告 :-)
+</p>
+
+<h4>第四步：使用mockup数据<a name="第四步使用Mockup数据"> </a></h4>
+<p>正常情况下，开发一个页面的时候，我们常常需要mockup一些后端的数据，为了演示这个例子，我们创建一个新的Action：
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/hellodata.js
+src/jn/demo/hellodata.html
+src/jn/demo/hellodata.css
+</pre></div>
+<p>之后更新
+</p>
+<div class="code"><pre>// 文件列表
+src/jn/demo/module.js
+</pre></div>
+<p>添加<code>path</code>和<code>action</code>的依赖关系：
+</p>
+<div class="code js_code"><pre><span class="c">/**</span>
+<span class="c"> * @type {Object}</span>
+<span class="c"> * @const</span>
+<span class="c"> */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="p">[</span>
+        <span class="p">...</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;location&quot;</span> <span class="o">:</span> <span class="s2">&quot;/jn/demo/hellodata&quot;</span><span class="o">,</span>
+            <span class="s2">&quot;action&quot;</span> <span class="o">:</span> <span class="s2">&quot;jn.demo.Hellodata&quot;</span>
+        <span class="p">}</span><span class="o">,</span>
+        <span class="p">...</span>
+    <span class="p">]</span><span class="o">,</span>
+
+    <span class="s2">&quot;url&quot;</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ad_list&quot;</span> <span class="o">:</span> <span class="s2">&quot;/api/demo/jn/demo/ad_list&quot;</span><span class="o">,</span>
+        <span class="s2">&quot;order_list&quot;</span> <span class="o">:</span> <span class="s2">&quot;/api/demo/jn/demo/order_list&quot;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+<p>添加数据访问接口：
+</p>
+<div class="code js_code"><pre><span class="c">/**</span>
+<span class="c"> * 后端数据访问接口</span>
+<span class="c"> * @type {Object.&lt;string, function(string, Function, Function)&gt;}.</span>
+<span class="c"> */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">jn</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">da_generator</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="s2">&quot;ad_list&quot;</span><span class="o">,</span>
+        <span class="s2">&quot;url&quot;</span> <span class="o">:</span> <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">ad_list</span>
+    <span class="p">}</span><span class="o">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="s2">&quot;order_list&quot;</span><span class="o">,</span>
+        <span class="s2">&quot;url&quot;</span> <span class="o">:</span> <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">order_list</span>
+    <span class="p">}</span>
+<span class="p">]);</span>
+</pre></div>
+<p>然后更新<code>src/jn/demo/hellodata.js</code>，实现<code>initModel</code>和<code>afterInit</code>方法，如下：
+</p>
+<div class="code js_code"><pre><span class="c">/** @inheritDoc */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">Hellodata</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initModel</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">argMap</span><span class="o">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">Fields</span><span class="p">.</span><span class="nx">ADVERTISER_NAME_FIELD</span><span class="o">,</span>
+        <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">Fields</span><span class="p">.</span><span class="nx">KEYWORDS_FIELD</span><span class="o">,</span>
+        <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">Fields</span><span class="p">.</span><span class="nx">STATUS_FIELD</span>
+    <span class="p">];</span>
+    <span class="nx">callback</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c">/** @inheritDoc */</span>
+<span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">Hellodata</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">afterInit</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">list</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">page</span><span class="p">.</span><span class="nx">getChild</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">requesterList</span> <span class="o">=</span> <span class="nx">jn</span><span class="p">.</span><span class="nx">demo</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">ad_list</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>最后，同样创建<code>hellodata.app.html</code>，查看效果 :-)
+</p>
+
+<h4>第五步：生成可部署的代码<a name="第五步生成可部署的代码"> </a></h4>
+<p>前面所有的例子，都是基于可调试的代码，并不是可以去线上部署的代码。为了能够正常的去线上
+   部署代码，我们需要一些额外的工作。这里需要涉及一个概念<code>entry_point</code>，实际上所有的<code>*.app.html</code>都是<code>entry_point</code>，因为
+   我们所有的代码都是从<code>*.app.html</code>开始执行的，所以如果需要生成可部署的代码，执行如下的命令即可：
+</p>
+<div class="code"><pre>Fer --gen_deploy --entry_point helloworld.app.html
+Fer --gen_deploy --entry_point helloui.app.html
+Fer --gen_deploy --entry_point hellodata.app.html
+</pre></div>
+<p>经典的用法如下：
+</p>
+<div class="code"><pre>cd webapp
+python externs/sdcfe/tools/bin/Fer.py
+       --gen_deploy
+       -p src
+       --entry_point src/jn/dashboard/landmark.app.html
+       -f &quot;--compilation_level=BAIDU_OPTIMIZATIONS&quot;
+       -f &quot;--formatting=PRETTY_PRINT&quot;
+       -f &quot;--warning_level=VERBOSE&quot;
+       -f &quot;--externs=src/tangram.externs.js&quot;
+       -f &quot;--externs=src/pdc.externs.js&quot;
+       -j assets/js/tangram-base-1.3.7.1.js
+</pre></div>
+<p>这么主要介绍一下<code>-j</code>参数，我们需要保证当执行<code>Fer.py</code>的时候，<code>-j</code>指明的文件路径是存在的。例如<code>-j</code>的值是
+   <code>this/is/a/path/tangram.js</code>，那么在生成的<code>landmark/index.html</code>的文件中，会自动生成<code>&lt;script src="assets/js/tangram.js"&gt;&lt;/script&gt;</code>，当然
+   还会同时建立好目录<code>assets/js</code>。
+</p>
+<h5>资源管理<a name="资源管理"> </a></h5><p>讲到部署，就免不了介绍一下系统的资源管理。开发模式下，我们的代码树结构是这样子的：
+</p>
+<div class="code"><pre>src/
+  base/
+  app/
+  er/
+  jn/
+    gold/
+    tieba/
+    landmark/
+    ...
+  third_party/
+    html5shiv/
+    stacktrace/
+    ueditor/
+    ...
+  ui/
+  css/
+  entry/
+    gold.html
+    tieba.html
+    landmark.html
+    ...
+</pre></div>
+<p>可以很明显的看到<code>jn</code>目录下面的内容跟<code>entry</code>目录下内容是机会一一对应的，因为<code>entry</code>本身的角色可以理解为一个比较复杂的<code>*.app.html</code>。最终
+   部署到线上的代码是这样子的：
+</p>
+<div class="code"><pre>  htdocs/
+    tieba/
+      index.html
+      tieba-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.css
+      tieba-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.js
+      assets/
+        application/
+          tieba-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.swf
+        image/
+          ...
+        js/
+          tangram-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.js
+          ...
+        text/
+          history-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.html
+          tpl-<span class="cp">${</span><span class="n">md5</span><span class="cp">}</span>.html
+</pre></div>
+<h5>工作过程<a name="工作过程"> </a></h5><ol>
+ <li><p>分析<code>entry_point.html</code>（Python内置HTMLParser），解析出所有的内联js代码，合并到一起用来后续进行分析，以Hello World为例，我们解析出来的代码如下：
+</p>
+<div class="code js_code"><pre>        <span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;app.Launch&#39;</span><span class="p">);</span>
+        <span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;er.controller&#39;</span><span class="p">);</span>
+        <span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;er.locator&#39;</span><span class="p">);</span>
+
+        <span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;jn.demo.Helloworld&#39;</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">COMPILED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c">// goog.require(&#39;jn.demo.mockup&#39;);</span>
+        <span class="p">}</span>
+
+<span class="nx">baidu</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="nb">window</span><span class="o">,</span> <span class="s1">&#39;load&#39;</span><span class="o">,</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="c">// app.Launch用来保证所有的模板和样式都加载完了</span>
+    <span class="c">// FIXME 解决IE6下面的样式overflow的问题？</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Launch</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">er</span><span class="p">.</span><span class="nx">controller</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">loc</span> <span class="o">=</span> <span class="nx">er</span><span class="p">.</span><span class="nx">locator</span><span class="p">.</span><span class="nx">getLocation</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">loc</span> <span class="o">||</span> <span class="nx">loc</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">er</span><span class="p">.</span><span class="nx">locator</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="s1">&#39;/jn/demo/helloworld&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+ </li>
+
+ <li><p>通过分析上一步获取到的js代码中的<code>goog.require</code>，获取到一个文件列表，如下：
+</p>
+<div class="code js_code"><pre><span class="nx">src</span><span class="o">/</span><span class="nx">base</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">base</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">template</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nb">Object</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">EventDispatcher</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">LifeCycle</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">PropertyChangeNotifier</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">BaseModel</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Control</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Page</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">Converter</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">InputControl</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="o">/</span><span class="nx">Validator</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">util</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">Worker</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/app/</span><span class="nx">worker</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/app/</span><span class="nx">app</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">config</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">locator</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">controller</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">ParamAdapter</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">pdc</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">DataSource</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/base/</span><span class="nx">ListDataSource</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">Action</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Button</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Mask</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Dialog</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/ui/</span><span class="nx">Dialog</span><span class="p">.</span><span class="nx">alert</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/jn/g</span><span class="nx">old</span><span class="sr">/coup/</span><span class="nx">loading</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/er/</span><span class="nx">context</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="o">/</span><span class="nx">Requester</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/jn/</span><span class="nx">util</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/jn/</span><span class="nx">demo</span><span class="o">/</span><span class="nx">module</span><span class="p">.</span><span class="nx">js</span> 
+<span class="nx">src</span><span class="sr">/jn/</span><span class="nx">demo</span><span class="o">/</span><span class="nx">helloworld</span><span class="p">.</span><span class="nx">js</span> 
+<span class="sr">/tmp/</span><span class="nx">tmpZNSX4j</span><span class="p">.</span><span class="nx">js</span>     <span class="c">// 这个文件就是保存第一步解析出来的那些代码</span>
+</pre></div>
+
+ </li>
+
+ <li><p>分析这个文件列表中的每个文件，找到符合<code>goog.include("*.css")</code>和<code>goog.include("*.less")</code>的特征的代码，将所有的css文件和less文件合并到一个css文件中，编译
+      一次，生成最终的css代码。同时将符合<code>goog.include("*.html")</code>特征的代码，合并到tpl.html文件中。
+</p>
+
+ </li>
+
+ <li><p>另外，因为css文件中会引用到图片，那么在合并css代码之前，需要对每个css文件进行rewrite，规则就是找到所有<code>background:</code>或者<code>background-image:</code>属性，
+      如果里面有<code>url(...)</code>的样式定义，就对<code>url()</code>中引用的文件进行重写，例如：
+</p>
+<div class="code"><pre><span class="nt">div</span> <span class="p">{</span> <span class="k">background</span><span class="o">:</span> <span class="sx">url(../../assets/img/esui.png)</span><span class="p">;</span> <span class="p">}</span>
+<span class="c">/** 重写为 */</span>
+<span class="nt">div</span> <span class="p">{</span> <span class="k">background</span><span class="o">:</span> <span class="sx">url(assets/image/esui-7ff04e745d9498b864485adad6733f4f.png)</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+<p>同时，相应的资源文件也会被拷贝到输出目录中去。当然，这个过程我们在最初解析<code>entry_point.html</code>和后续解析<code>tpl.html</code>的时候也会进行，主要是分析<code>&lt;img&gt;</code>和<code>style属性</code>中
+   的内容，找到需要的图片，将其拷贝到输出目录中去。
+</p>
+
+ </li>
+
+ <li><p>另外，我们还需要对最终输出的js代码中的一些文件路径进行重写定义，主要有两个：
+</p>
+<div class="code js_code"><pre><span class="c">/**</span>
+<span class="c"> * deploy模式下模板的路径</span>
+<span class="c"> * @define {string}</span>
+<span class="c"> */</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">asyncResource</span> <span class="o">=</span> <span class="s1">&#39;tpl.html&#39;</span><span class="o">;</span>
+
+<span class="c">/**</span>
+<span class="c"> * history文件路径</span>
+<span class="c"> * @define {string}</span>
+<span class="c"> */</span>
+<span class="nx">er</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">CONTROL_IFRAME_URL</span> <span class="o">=</span> <span class="s2">&quot;/assets/history.html&quot;</span><span class="o">;</span>
+</pre></div>
+<p>只需要在编译的时候，通过传递<code>--define</code>参数来修改这两个变量的值即可。
+</p>
+
+ </li>
+
+ <li><p>在整个生成部署代码的过程中，有一个<code>AssetsManager</code>用来管理所有的资源，它的用法很简单，传递给它一个可以
+      访问的文件路径，然后它返回一个新的路径，例如：
+</p>
+<div class="code"><pre><span class="n">am</span> <span class="o">=</span> <span class="n">assets_manager</span><span class="o">.</span><span class="n">AssetsManager</span><span class="p">(</span><span class="s">&quot;/tmp/output&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">am</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;assets/js/tangram-base-1.3.7.1.js&quot;</span><span class="p">)</span>
+</pre></div>
+<p>同时会自动将这个资源拷贝到<code>/tmp/output</code>的合适目录中
+</p>
+
+ </li>
+
+ <li><p>最终，部署代码中的资源路径都是相对于最后输出的<code>helloworld.app.html</code>的，不存在绝对路径的情况了。
+</p>
+
+ </li>
+
+ <li><p>另外，我们还会进行一些特殊的优化过程，主要是<code>auto sprite</code>和<code>png8</code>图片的生成。在生成最终的css代码之后，我们会扫描代码中使用背景
+   图片的地方，找到以<code>icon_</code>或者<code>icon-</code>开头的文件名，将这些地方使用的图片自动合并为一张大的背景图，并修改原来地方的文件路径和偏移量。<code>png8</code>图片的
+   生成是针对IE6做的一些优化，并不是特别关键，但是也会减少我们很多的工作量。
+</p>
+
+ </li>
+
+ <li><p>当然，为了简化<code>Fer --gen_deploy</code>的调用，我们已经更新了<code>build.xml</code>，可以直接通过调用<code>app.deploy</code>这个target来完成，例如：
+</p>
+<p>ant app.deploy -Dentry_point=src/jn/dashboard/landmark.app.html -Doutput_dir_name=app
+</p>
+
+ </li>
+</ol>
+<h5>IE下面的调试<a name="Ie下面的调试"> </a></h5><p>因为IE下面的<a href="http://blogs.msdn.com/b/ieinternals/archive/2011/05/14/internet-explorer-stylesheet-rule-selector-import-sheet-limit-maximum.aspx">这个限制</a>，导致
+   我们在调试IE下面样式的时候很容易处于无助的状态，手工合并样式代码简直让人崩溃。借助<code>Fserver</code>和我们改进的<code>app.js</code>很好的解决了这个问题。当我们调试的时候，如果
+   在URL地址中添加<code>combine_css=1</code>参数，就可以自动的将这个页面中所需要引用的CSS合并起来，返回给浏览器。这里简单介绍一下实现细节：
+</p>
+<p>因为页面<code>onload</code>之后，所有的js都已经加载完毕了，因此所有调用<code>goog.include</code>地方都执行过了，那我们完全就掌握了这个页面需要哪些<code>css</code>要去加载，默认的方式，
+   我们是为每个<code>css</code>文件创建一个<code>link</code>标签去加载，当我们发现有<code>combine_css=1</code>参数的时候，我们就自动切换到另外的模式，将<code>css</code>自动分组，然后发一个请求过去，
+   让<code>Fserver</code>把合并之后的内容返回过来。至于每组多少个<code>css</code>文件，跟该组内<code>css</code>的文件总的路径长度有关系，我们比较保守，设了一个<code>800</code>字节的限制。
+</p>
+<div class="code js_code"><pre><span class="k">if</span> <span class="p">(</span><span class="sr">/cc=1|combine_css=1/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">))</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">request_id</span> <span class="o">=</span> <span class="nx">getRequestId</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">chunks</span> <span class="o">=</span> <span class="nx">combinedUris</span><span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">asyncStyles</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">chunks</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span> <span class="nx">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">styleElt</span> <span class="o">=</span> <span class="nx">doc</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;LINK&#39;</span><span class="p">);</span>
+    <span class="nx">styleElt</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="o">,</span> <span class="s1">&#39;text/css&#39;</span><span class="p">);</span>
+    <span class="nx">styleElt</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;rel&#39;</span><span class="o">,</span> <span class="s1">&#39;stylesheet&#39;</span><span class="p">);</span>
+    <span class="nx">styleElt</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="o">,</span> <span class="s1">&#39;/combine/all.css?uris=&#39;</span> <span class="o">+</span> 
+      <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">chunks</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">+</span>
+      <span class="s2">&quot;&amp;.timestamp=&quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">+</span>
+      <span class="s2">&quot;&amp;request_id=&quot;</span> <span class="o">+</span> <span class="nx">request_id</span> <span class="o">+</span>
+      <span class="s2">&quot;&amp;index=&quot;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span>
+      <span class="s2">&quot;&amp;count=&quot;</span> <span class="o">+</span> <span class="nx">chunks</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+    <span class="nx">head</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">styleElt</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">iAmFe</span> <span class="o">=</span> <span class="nx">isDebugMode</span><span class="p">();</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+<p><code>request_id</code>是随机生成的，用来唯一的标识一个请求，<code>index</code>告诉Fserver当前的分组索引，<code>count</code>告诉Fserver总共有多少个分组。如果我们创建了三个<code>link</code>标签去发请求：
+</p>
+<div class="code"><pre>/combine/all.css?uris=a.css,b.css&amp;request_id=hello&amp;index=0&amp;count=3
+/combine/all.css?uris=c.css,d.css&amp;request_id=hello&amp;index=1&amp;count=3
+/combine/all.css?uris=e.css,f.css&amp;request_id=hello&amp;index=2&amp;count=3
+</pre></div>
+<p>但是因为浏览器的实现不同，我们不能保证请求的发送顺序一定跟link标签的创建顺序是一致的，有可能Fserver收到的请求顺序是这样子的：
+</p>
+<div class="code"><pre>/combine/all.css?uris=e.css,f.css&amp;request_id=hello&amp;index=2&amp;count=3
+/combine/all.css?uris=c.css,d.css&amp;request_id=hello&amp;index=1&amp;count=3
+/combine/all.css?uris=a.css,b.css&amp;request_id=hello&amp;index=0&amp;count=3
+</pre></div>
+<p>但是Fserver返回的内容必须要保证顺序正确，也就是必须是<code>a.css,b.css,c.css,d.css,e.css,f.css</code>这样的顺序，否则可能会影响到页面的效果。<code>index</code>和<code>count</code>就是
+   给Fserver机会去修正这个可能的错误。Fserver每收到一个请求，并不会立即返回css代码，如果没有收到全部的请求，只会返回一句<code>/** Waiting for next chunk */</code>。当
+   收到所有的请求之后，会将<code>uris</code>中的值按照<code>index</code>的顺序排序，然后再合并，返回给浏览器，从而可以保证即便收到的请求是乱序的，最终返回的内容也是符合我们需求的。
+</p>
+            </div>
+        </div><!--article-->
+    </div><!--articleWrap-->
+</div>
+</body>
+</html>

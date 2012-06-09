@@ -20,10 +20,11 @@
 @page {
   /** Kindle 6 inch */
   size: 9.12cm 12.16cm;
+  /** size: 12.16cm 9.12cm; */
   margin: 20pt 15pt 20pt 15pt;
 
   @top-right {
-    content: "这里是每页的表头";
+    content: "[SDCFE]新人指南-feutils";
     vertical-align: bottom;
     font-size: 50%;
     border-bottom: 1px solid black;
@@ -54,6 +55,30 @@
 @font-face {
   font-family: monospace;
   src: local("Ubuntu Mono");
+}
+
+body {
+  font: 16px/1.5 Arial,sans-serif !important;
+}
+
+#toc {
+  border: none !important;
+  border-radius: none !important;
+  padding: 0 !important;
+}
+
+#toc > ul > ul {
+  list-style: none !important;
+  margin-left: 0 !important;
+}
+
+code {
+  background-color: transparent !important;
+}
+
+.code pre {
+  margin-left: 0 !important;
+  padding: 0.5em !important;
 }
 
 .chapter {
