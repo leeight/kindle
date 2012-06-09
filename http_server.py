@@ -29,6 +29,7 @@ class SendToKindleHandler(tornado.web.RequestHandler):
   def get(self):
     self.set_header("Content-Type", "text/javascript; charset=utf-8")
 
+    email = self.get_argument("email")
     title = self.get_argument("title")
     url = self.get_argument("url")
     version = self.get_argument("version", default="6")
@@ -36,7 +37,7 @@ class SendToKindleHandler(tornado.web.RequestHandler):
 
     try:
       server = redis.Redis("localhost")
-      mq_length = server.lpush("MQ_SEND_TO_KINDLE", (title, url, version))
+      mq_length = server.lpush("MQ_SEND_TO_KINDLE", (email, title, url, version))
       self.write("%s(%s);" % (callback, json.dumps({
           "success" : True,
           "mq_length" : mq_length
