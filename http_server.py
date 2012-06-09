@@ -12,6 +12,8 @@
 
 import os
 import sys
+import logging
+from logging.handlers import TimedRotatingFileHandler
 
 
 __author__ = 'leeight <liyubei@baidu.com>'
@@ -68,6 +70,10 @@ application = tornado.web.Application([
 ])
 
 if __name__ == "__main__":
-  application.listen(8964)
+  logger = logging.getLogger()
+  logger.addHandler(TimedRotatingFileHandler("logs/access.log"))
+  logger.setLevel(-1)
+
+  application.listen(8965)
   tornado.ioloop.IOLoop.instance().start()
 
