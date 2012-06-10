@@ -93,8 +93,9 @@ def main():
       logging.debug("email = [%s], title = [%s], url = [%s], version = [%s]",
           email, title, url, version)
       attachment = fetch_as_attachment(title, url, version)
-      send_mail(email, title, attachment)
-      os.remove(attachment)
+      if attachment:
+        send_mail(email, title, attachment)
+        os.remove(attachment)
     except Exception as e:
       logging.error(e)
       import time
