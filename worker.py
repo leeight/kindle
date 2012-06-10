@@ -35,20 +35,21 @@ def send_mail(receiver, subject, attachment):
   from email.MIMEMultipart import MIMEMultipart
   from email.MIMEBase import MIMEBase
   from email import Encoders
+  from email.header import Header
 
   sender = "adocnoreply@gmail.com"
 
   msg = MIMEMultipart()
-  msg['Subject'] = utf8(subject)
+  msg['Subject'] = Header(utf8(subject), "utf-8")
   msg['From'] = sender
   msg['To'] = receiver
 
   if os.path.exists(attachment):
-    part = MIMEBase('application', "pdf")
+    filename = str(Header(os.path.basename(attachment), "utf-8"))
+    part = MIMEBase('application', "pdf", name=filename)
     part.set_payload(open(attachment, "rb").read())
     Encoders.encode_base64(part)
-    part.add_header('Content-Disposition', 'attachment; filename="' +
-        os.path.basename(attachment) + '"')
+    part.add_header('Content-Disposition', 'attachment; filename="' + filename + '"')
     msg.attach(part)
 
   session = smtplib.SMTP('smtp.gmail.com', 587)

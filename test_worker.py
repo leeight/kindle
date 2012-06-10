@@ -23,7 +23,7 @@ __revision = '$Revision$'
 
 class WorkerTestCase(unittest.TestCase):
   def testSendmail(self):
-    worker.send_mail("leeight@gmail.com", "我很好啊", "feutils.pdf")
+    worker.send_mail("leeight@kindle.com", "ADoc帮助文档", "ADoc帮助文档.pdf")
     pass
 
 
