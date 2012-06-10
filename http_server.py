@@ -37,7 +37,8 @@ class SendToKindleHandler(tornado.web.RequestHandler):
 
     try:
       server = redis.Redis("localhost")
-      mq_length = server.lpush("MQ_SEND_TO_KINDLE", (email, title, url, version))
+      mq_length = server.lpush("MQ_SEND_TO_KINDLE", json.dumps((email, title, url, version)))
+      logging.debug('mq_length = [%d]', mq_length)
       self.write("%s(%s);" % (callback, json.dumps({
           "success" : True,
           "mq_length" : mq_length
