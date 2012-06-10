@@ -64,8 +64,7 @@ def fetch_as_attachment(title, url, version = 6):
   import tempfile
 
   f = tempfile.NamedTemporaryFile(delete=True, suffix='.css')
-  f.write(KINDLE_CSS_TPL.replace("[SDCFE]新人指南-feutils",
-      "[ADoc]" + utf8(title)))
+  f.write(KINDLE_CSS_TPL.replace("[SDCFE]新人指南-feutils", utf8(title)))
   f.flush()
 
   dest_pdf = utf8(title) + '.pdf'
@@ -95,6 +94,7 @@ def main():
           email, title, url, version)
       attachment = fetch_as_attachment(title, url, version)
       send_mail(email, title, attachment)
+      os.remove(attachment)
     except Exception as e:
       logging.error(e)
       import time

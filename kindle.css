@@ -21,7 +21,7 @@
   /** Kindle 6 inch */
   size: 9.12cm 12.16cm;
   /** size: 12.16cm 9.12cm; */
-  margin: 20pt 15pt 20pt 15pt;
+  margin: 20pt 10pt 20pt 10pt;
 
   @top-right {
     content: "[SDCFE]新人指南-feutils";
@@ -61,6 +61,10 @@ body {
   font: 16px/1.5 Arial,sans-serif !important;
 }
 
+#article {
+  padding: 0 !important;
+}
+
 #toc {
   border: none !important;
   border-radius: none !important;
@@ -79,6 +83,7 @@ code {
 .code pre {
   margin-left: 0 !important;
   padding: 0.5em !important;
+  font-size: 70% !important;
 }
 
 .chapter {
