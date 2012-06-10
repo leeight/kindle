@@ -13,7 +13,6 @@
 import os
 import sys
 import logging
-from logging.handlers import TimedRotatingFileHandler
 import redis
 import subprocess
 import json
@@ -101,11 +100,11 @@ def main():
       time.sleep(1)
 
 if __name__ == '__main__':
-  logger = logging.getLogger()
-  logger.addHandler(TimedRotatingFileHandler("logs/worker.log"))
-  logger.setLevel(-1)
-
+  from log import init_log
+  init_log("logs/worker.log")
   main()
+
+
 
 
 
